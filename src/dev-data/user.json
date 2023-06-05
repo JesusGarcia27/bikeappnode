@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "name": "Pedro",
+        "email": "pedro@gmail.com",
+        "password": 1234,
+        "role": "employee",
+        "status": "pending"
+    },
+    {
+        "id": 2,
+        "name": "Ramon",
+        "email": "Ramon@gmail.com",
+        "password": 567,
+        "role": "client",
+        "status": "available"
+    }
+]
