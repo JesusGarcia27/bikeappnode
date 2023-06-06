@@ -2,12 +2,7 @@ const Repair = require('../models/repairs.model');
 
 exports.pendingBikes = async (req, res) => {
   try {
-    const pendingRepairs = await Repair.findAll({
-      where: {
-        status: 'pending',
-        message: 'Motorcycles pending repair',
-      },
-    });
+    const pendingRepairs = await Repair.findAll();
 
     res.json(pendingRepairs);
   } catch (error) {
@@ -64,9 +59,9 @@ exports.getPendingBikeById = async (req, res) => {
 
 exports.completed = async (req, res) => {
   try {
-    const { repairId } = req.params;
+    const { id } = req.params;
 
-    const repair = await Repair.findByPk(repairId);
+    const repair = await Repair.findByPk(id);
     if (!repair) {
       return res.status(404).json({
         error: 'Repair not found',
@@ -88,10 +83,10 @@ exports.completed = async (req, res) => {
 };
 
 exports.cancelled = async (req, res) => {
-  const { repairId } = req.params;
+  const { id } = req.params;
 
   try {
-    const repair = await Repair.findByPk(repairId);
+    const repair = await Repair.findByPk(id);
 
     if (!repair) {
       return res.status(404).json({

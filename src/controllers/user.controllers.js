@@ -1,11 +1,7 @@
 const User = require('../models/user.model.js');
 
 exports.findAllUsers = async (req, res) => {
-  const users = await User.findAll({
-    where: {
-      status: true,
-    },
-  });
+  const users = await User.findAll();
 
   return res.status(200).json({
     status: 'success',
@@ -17,18 +13,6 @@ exports.findAllUsers = async (req, res) => {
 exports.findClient = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-
-    //verificar si ya existe un usuario con el mismo ID
-    const existingUserById = await User.findOne({
-      where: { id },
-    });
-
-    if (existingUserById) {
-      return res.status(409).json({
-        status: 'error',
-        message: 'A user with the same ID already exists',
-      });
-    }
 
     // verificar si ya existe un usuarui con el mismo correo electronico
     const existingUserByEmail = await User.findOne({
@@ -51,7 +35,7 @@ exports.findClient = async (req, res) => {
     });
 
     return res.status(201).json({
-      status: 'success',
+      status: 'available',
       message: 'The user has been created!',
       user,
     });
@@ -69,7 +53,7 @@ exports.findUser = async (req, res) => {
     const { id } = req.params;
     const user = await User.findOne({
       where: {
-        status: true,
+        status: 'available',
         id,
       },
     });
@@ -101,14 +85,7 @@ exports.update = async (req, res) => {
 
     const { name, email } = req.body;
 
-    const user = await User.findOne({
-      where: {
-        status: true,
-        id,
-        name,
-        email,
-      },
-    });
+    const user = await User.findByPk(id);
 
     if (!user) {
       return res.status(404).json({
@@ -117,13 +94,14 @@ exports.update = async (req, res) => {
       });
     }
 
-    await user.update({ name, password });
+    await user.update({ name, email });
 
     res.status(200).json({
       status: 'success',
       message: 'The user has been updated!',
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: 'fail',
       message: 'Something went very wrong!',
@@ -135,12 +113,7 @@ exports.delete = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findOne({
-      where: {
-        status: true,
-        id,
-      },
-    });
+    const user = await User.findByPk(id);
 
     if (!user) {
       return res.status(404).json({
@@ -156,6 +129,7 @@ exports.delete = async (req, res) => {
       message: 'The user has been deleted!',
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: 'fail',
       message: 'Something went very wrong!',

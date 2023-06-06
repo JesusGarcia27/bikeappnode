@@ -1,18 +1,37 @@
 [
     {
-        "id": 1,
-        "name": "Pedro",
+        "id": 50,
+        "name": "Juanito alimañna",
         "email": "pedro@gmail.com",
-        "password": 1234,
-        "role": "employee",
-        "status": "pending"
+        "password": "jesus",
+        "role": "client"
     },
     {
-        "id": 2,
-        "name": "Ramon",
-        "email": "Ramon@gmail.com",
-        "password": 567,
-        "role": "client",
-        "status": "available"
+        "id": 100,
+        "name": "Zlatan Ibrahimovic",
+        "email": "zlatan@gmail.com",
+        "password": "jesus",
+        "role": "client"
+    },
+    {
+        "id": 150,
+        "name": "David Beckam",
+        "email": "beckam@gmail.com",
+        "password": "jesus",
+        "role": "employee"
+    },
+    {
+        "id": 200,
+        "name": "Andrea Pirlo",
+        "email": "pirlo@gmail.com",
+        "password": "jesus",
+        "role": "client"
+    },
+    {
+        "id": 250,
+        "name": "Juan Arango",
+        "email": "arango@gmail.com",
+        "password": "jesus",
+        "role": "employee"
     }
 ]

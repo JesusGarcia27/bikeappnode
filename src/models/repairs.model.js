@@ -17,7 +17,7 @@ const Repair = db.define('repairs', {
     allowNull: false,
     defaultValue: 'pending',
     validate: {
-      isIn: [['pending', 'completed']],
+      isIn: [['pending', 'completed', 'cancelled']],
     },
   },
   userId: {
@@ -25,3 +25,5 @@ const Repair = db.define('repairs', {
     allowNull: false,
   },
 });
+
+module.exports = Repair;
