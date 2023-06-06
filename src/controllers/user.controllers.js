@@ -1,13 +1,21 @@
 const User = require('../models/user.model.js');
 
 exports.findAllUsers = async (req, res) => {
-  const users = await User.findAll();
+  try {
+    const users = await User.findAll();
 
-  return res.status(200).json({
-    status: 'success',
-    message: 'Users was found successfully',
-    users,
-  });
+    return res.status(200).json({
+      status: 'success',
+      message: 'Users was found successfully 🛩️',
+      users,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 'fail',
+      message: 'Something went very wrong! 😣',
+    });
+  }
 };
 
 exports.findClient = async (req, res) => {
@@ -22,7 +30,7 @@ exports.findClient = async (req, res) => {
     if (existingUserByEmail) {
       return res.status(409).json({
         status: 'error',
-        message: 'A user with the same email already exists',
+        message: 'A user with the same email already exists 😮',
       });
     }
 
@@ -36,14 +44,14 @@ exports.findClient = async (req, res) => {
 
     return res.status(201).json({
       status: 'available',
-      message: 'The user has been created!',
+      message: 'The user has been created! 😃',
       user,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       status: 'fail',
-      message: 'Something went very wrong!',
+      message: 'Something went very wrong! 😣',
     });
   }
 };
@@ -61,7 +69,7 @@ exports.findUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: 'error',
-        message: `The user with id: ${id} not found!`,
+        message: `The user with id: ${id} not found! ⛔`,
       });
     }
 
@@ -74,7 +82,7 @@ exports.findUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       status: 'fail',
-      message: 'Something went very wrong!',
+      message: 'Something went very wrong! 😣',
     });
   }
 };
@@ -90,7 +98,7 @@ exports.update = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: 'error',
-        message: `User with id: ${id} not found`,
+        message: `User with id: ${id} not found ⛔`,
       });
     }
 
@@ -98,13 +106,13 @@ exports.update = async (req, res) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'The user has been updated!',
+      message: 'The user has been updated! 🫡',
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       status: 'fail',
-      message: 'Something went very wrong!',
+      message: 'Something went very wrong! ⛔',
     });
   }
 };
@@ -118,7 +126,7 @@ exports.delete = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: 'error',
-        message: `User with id: ${id} not found`,
+        message: `User with id: ${id} not found ⛔`,
       });
     }
 
@@ -126,13 +134,13 @@ exports.delete = async (req, res) => {
 
     return res.status(200).json({
       status: 'success',
-      message: 'The user has been deleted!',
+      message: 'The user has been deleted! 😭',
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       status: 'fail',
-      message: 'Something went very wrong!',
+      message: 'Something went very wrong! ⛔',
     });
   }
 };
