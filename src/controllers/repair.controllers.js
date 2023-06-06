@@ -14,7 +14,8 @@ exports.pendingBikes = async (req, res) => {
 
 exports.diary = async (req, res) => {
   try {
-    const { date, userId } = req.body;
+    const { userId } = req.body;
+    const date = new Date();
 
     const newRepair = await Repair.create({
       date: date,
