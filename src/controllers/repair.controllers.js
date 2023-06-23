@@ -1,109 +1,76 @@
 const Repair = require('../models/repairs.model');
+const User = require('../models/user.model');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
-exports.pendingBikes = async (req, res) => {
-  try {
-    const pendingRepairs = await Repair.findAll();
-
-    res.json(pendingRepairs);
-  } catch (error) {
-    res.status(500).json({
-      error: 'An error ocurred while fetching pending repairs 😣',
-    });
-  }
-};
-
-exports.diary = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    const date = new Date();
-
-    const newRepair = await Repair.create({
-      date: date,
-      userId: userId,
-    });
-
-    res.status(201).json({
-      message: 'Appointment created successfully 😃',
-      repair: newRepair,
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: 'An error ocurred while creating the appointment ⛔',
-    });
-  }
-};
-
-exports.getPendingBikeById = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const pendingRepair = await Repair.findOne({
-      where: {
-        status: 'pending',
-        id: id,
+exports.pendingBikes = catchAsync(async (req, res, next) => {
+  const repairs = await Repair.findAll({
+    where: {
+      status: ['pending', 'completed'],
+    },
+    attributes: {
+      exclude: ['status'],
+    },
+    include: [
+      {
+        model: User,
       },
-    });
+    ],
+  });
 
-    if (pendingRepair) {
-      return res.json(pendingRepair);
-    } else {
-      return res.status(404).json({
-        error: 'Pending repair not found 😩',
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      error: 'An error ocurred while fetching the pending repair ⛔',
-    });
-  }
-};
+  return res.status(200).json({
+    status: 'success',
+    results: repairs.length,
+    repairs,
+  });
+});
 
-exports.completed = async (req, res) => {
-  try {
-    const { id } = req.params;
+exports.newRepair = catchAsync(async (req, res, next) => {
+  const { date, motorsNumber, description } = req.body;
+  const { id } = req.sessionUser;
 
-    const repair = await Repair.findByPk(id);
-    if (!repair) {
-      return res.status(404).json({
-        error: 'Repair not found',
-      });
-    }
+  const repair = await Repair.create({
+    date,
+    motorsNumber: motorsNumber.toLowerCase(),
+    description,
+    userId: id,
+  });
 
-    repair.status = 'completed';
-    await repair.save();
+  res.status(201).json({
+    message: 'Appointment created successfully 😃',
+    repair,
+  });
+});
 
-    res.json({
-      message: 'Repair status updated to "completed" ✅',
-      repair: repair,
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: 'An error occurred while updating the repair status ⛔',
-    });
-  }
-};
+exports.getPendingBikeById = catchAsync(async (req, res, next) => {
+  const { repair } = req;
 
-exports.cancelled = async (req, res) => {
-  const { id } = req.params;
+  return res.status(200).json({
+    status: 'success',
+    repair,
+  });
+});
 
-  try {
-    const repair = await Repair.findByPk(id);
+exports.completed = catchAsync(async (req, res, next) => {
+  const { repair, user } = req;
 
-    if (!repair) {
-      return res.status(404).json({
-        error: 'Repair not found ⛔',
-      });
-    }
+  await repair.update({ status: 'completed' });
 
-    repair.status = 'cancelled';
-    await repair.save();
+  res.json({
+    status: 'success',
+    message: 'Repair status updated to "completed" ✅',
+    repair,
+    user,
+  });
+});
 
-    res.json({
-      message: 'Repair canceled successfully 😩',
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: 'An error ocurred while canceling the repair ⛔',
-    });
-  }
-};
+exports.cancelled = catchAsync(async (req, res, next) => {
+  const { repair } = req.params;
+
+  await repair.update({ status: 'cancelled' });
+
+  return res.status(200).json({
+    status: 'success',
+    message: `repair with id: ${id} ha been cancelled`,
+  });
+});

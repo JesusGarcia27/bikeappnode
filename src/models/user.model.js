@@ -15,6 +15,7 @@ const User = db.define('users', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -26,12 +27,9 @@ const User = db.define('users', {
     defaultValue: 'client',
   },
   status: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('available', 'disabled'),
     allowNull: false,
     defaultValue: 'available',
-    validate: {
-      isIn: [['available', 'disabled']],
-    },
   },
 });
 
