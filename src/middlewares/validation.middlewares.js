@@ -22,9 +22,15 @@ exports.createUserValidation = [
     .withMessage('Must be a valid email'),
   body('password')
     .notEmpty()
-    .withMessage('Password cannot be empty')
+    .withMessage('password cannot be empty')
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characteres long'),
+    .withMessage('Password must be at least 8 characters long')
+    .matches(/\d/)
+    .withMessage('Password must have at least one number')
+    .matches(/[A-Z]/)
+    .withMessage('Password must contain at least one capital letter')
+    .matches(/[!@#$%^&*(),.?\":{}|<>]/)
+    .withMessage('Password must contain at least one special character'),
   validFields,
 ];
 
@@ -38,7 +44,13 @@ exports.loginUserValidation = [
     .notEmpty()
     .withMessage('password cannot be empty')
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
+    .withMessage('Password must be at least 8 characters long')
+    .matches(/\d/)
+    .withMessage('Password must have at least one number')
+    .matches(/[A-Z]/)
+    .withMessage('Password must contain at least one capital letter')
+    .matches(/[!@#$%^&*(),.?\":{}|<>]/)
+    .withMessage('Password must contain at least one special character'),
   validFields,
 ];
 

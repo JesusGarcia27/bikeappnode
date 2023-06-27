@@ -8,7 +8,6 @@ const globalErrorHandler = require('./controllers/error.controllers');
 //Routes
 const userRouter = require('./routes/user.routes');
 const repairRouter = require('./routes/repairs.routes');
-const authRouter = require('./routes/auth.routes');
 
 const app = express();
 
@@ -19,7 +18,6 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/repairs', repairRouter);
 

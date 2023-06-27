@@ -42,6 +42,26 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.loginUser = catchAsync(async (req, res, next) => {
+  //Nos traemos la informacion
+  const { email } = req.body;
+
+  //Buscar el usuario y mirar si existe
+  const user = await User.findOne({
+    where: {
+      email: email.toLowerCase(),
+      status: 'available',
+    },
+  });
+
+  if (!user) {
+    return next(new AppError(`User with email: ${email} not found`, 404));
+  }
+
+  req.user = user;
+  next();
+});
+
 exports.protectAccountOwner = catchAsync(async (req, res, next) => {
   const { user, sessionUser } = req;
 

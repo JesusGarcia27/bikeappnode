@@ -46,26 +46,15 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  //Nos traemos la informacion
-  const { email, password } = req.body;
+  const { user } = req;
+  const { password } = req.body;
 
-  //Buscar el usuario y mirar si existe
-  const user = await User.findOne({
-    where: {
-      email: email.toLowerCase(),
-      status: 'available',
-    },
-  });
-
-  if (!user) {
-    return next(new AppError(`User with email: ${email} not found`, 404));
-  }
-
-  //validar la password
   if (!(await bcrypt.compare(password, user.password))) {
-    return next(new AppError(`Incorrect email or password`, 401));
+    return res.status(401).json({
+      status: 'error',
+      message: 'Incorrect email or password',
+    });
   }
-
   //crear el token
   const token = await generateJWT(user.id);
 
@@ -81,4 +70,7 @@ exports.login = catchAsync(async (req, res, next) => {
       role: user.role,
     },
   });
+
+  req.user = user;
+  next();
 });
